@@ -42,6 +42,7 @@ var paymentToTransactionConverter = new RestToLibTxConverter();
  *  @param {Express.js Next} next
  */
 function submitPayment(request, response, next) {
+  console.log("SubmitPayment")
 
   var steps = [
     validateOptions,
@@ -69,6 +70,7 @@ function submitPayment(request, response, next) {
   };
 
   function validateOptions(async_callback) {
+    console.log("validateOptions")
     if (!params.payment) {
       async_callback(new InvalidRequestError('Missing parameter: payment. Submission must have payment object in JSON form'));
     }
@@ -87,12 +89,14 @@ function submitPayment(request, response, next) {
   }
 
   function validatePayment(async_callback) {
+    console.log("validatePaymnet")
     paymentIsValid(params.payment, function(error, payment){
       async_callback(error ? error : void(0));
     });
   }
 
   function formatPayment(async_callback) {
+    console.log("formatPayment")
     paymentToTransactionConverter.convert(params.payment, function(error, transaction) {
       if (error) {
         async_callback(error);
@@ -103,6 +107,7 @@ function submitPayment(request, response, next) {
   }
 
   function submitTransaction(transaction, async_callback) {
+    console.log("submitTransaction")
     params.transaction = transaction;
     transactions.submit(params, response, async_callback);
   }
